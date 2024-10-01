@@ -2,13 +2,13 @@ import styled from "styled-components/native";
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #666;
+  background-color: #333;
   padding: 20px;
 `;
 
 export const MessageContainer = styled.View<{ isUser: boolean }>`
   align-self: ${({ isUser }) => (isUser ? "flex-end" : "flex-start")};
-  background-color: ${({ isUser }) => (isUser ? "#7b1fa2" : "#b388ff")};
+  background-color: ${({ isUser }) => (isUser ? "#2f3083" : "#6f3083")};
   padding: 15px;
   margin: 10px 0px;
   border-radius: 15px;
@@ -37,7 +37,7 @@ export const Input = styled.TextInput`
 `;
 
 export const SendButton = styled.TouchableOpacity`
-  background-color: #b388ff;
+  background-color: #6f3083;
   padding: 10px;
   border-radius: 30px;
   margin-left: 10px;

@@ -7,7 +7,7 @@ import {
 import { useStorageState } from "../hooks/useStorageState";
 
 const AuthContext = createContext<{
-  signIn: () => void;
+  signIn: (token: string) => void;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
@@ -34,8 +34,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
   const authContextValue = useMemo(
     () => ({
-      signIn: () => {
-        setSession("token");
+      signIn: (userData: string) => {
+        setSession(userData);
       },
       signOut: () => {
         setSession(null);

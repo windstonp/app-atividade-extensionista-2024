@@ -9,10 +9,15 @@ export default function AppLayout() {
     return <Text>Loading...</Text>;
   }
 
-  console.log(session);
   if (!session) {
     return <Redirect href="/sign-in" />;
   }
 
-  return <Stack />;
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
+  );
 }

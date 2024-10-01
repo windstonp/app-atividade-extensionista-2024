@@ -15,9 +15,14 @@ import {
 import { ISignUpInterface } from "@/types/SignUpInterface";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpSchema } from "@/validators/signUpSchema";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { httpClient } from "@/lib/apiClient";
+import { useSession } from "@/providers/AuthProvider";
 
 export default function SignUpScreen() {
+  const router = useRouter();
+  const { signIn } = useSession();
+
   const {
     control,
     handleSubmit,
@@ -26,9 +31,23 @@ export default function SignUpScreen() {
     resolver: yupResolver(signUpSchema),
   });
 
-  const onSubmit = (data: ISignUpInterface) => {
-    console.log(data);
-    Alert.alert("Registration successful!", `Welcome, ${data.name}`);
+  const onSubmit = async (data: ISignUpInterface) => {
+    try {
+      const { data: userInfo } = await httpClient.post("/users", {
+        ...data,
+      });
+
+      signIn(
+        JSON.stringify({
+          ...userInfo,
+        })
+      );
+      router.push("/(app)/chat");
+    } catch (errors: any) {
+      if (errors?.response?.data?.message) {
+        Alert.alert("ERRO", errors.response.data.message, [{ text: "ok" }]);
+      }
+    }
   };
 
   return (

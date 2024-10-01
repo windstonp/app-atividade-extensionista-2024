@@ -17,6 +17,7 @@ import { signInSchema } from "@/validators/signInSchema";
 import { Link, useRouter } from "expo-router";
 import { ISignInInterface } from "@/types/SignInInterface";
 import { useSession } from "@/providers/AuthProvider";
+import { httpClient } from "@/lib/apiClient";
 
 export function SignInScreen() {
   const { signIn } = useSession();
@@ -30,9 +31,23 @@ export function SignInScreen() {
     resolver: yupResolver(signInSchema),
   });
 
-  const onSubmit = (data: ISignInInterface) => {
-    signIn();
-    router.navigate("(app)/chat");
+  const onSubmit = async (data: ISignInInterface) => {
+    try {
+      const { data: userInfo } = await httpClient.post("/sessions", {
+        ...data,
+      });
+
+      signIn(
+        JSON.stringify({
+          ...userInfo,
+        })
+      );
+      router.push("/(app)/chat");
+    } catch (errors: any) {
+      if (errors?.response?.data?.message) {
+        Alert.alert("ERRO", errors.response.data.message, [{ text: "ok" }]);
+      }
+    }
   };
 
   return (
